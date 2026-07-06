@@ -1,10 +1,10 @@
 import { Typography, Grid } from "@mui/material";
 
-import MainLayout from "../../components/layout/MainLayout";
-import DashboardCard from "../../components/dashboard/DashboardCard";
-import RecentOrders from "../../components/dashboard/RecentOrders";
+import MainLayout from "../../../components/layout/MainLayout";
+import DashboardCard from "../components/DashboardCard";
+import RecentOrders from "../components/RecentOrders";
 
-import { dashboardCards } from "../../data/dashboard";
+import { dashboardCards } from "../data/dashboard";
 
 function Dashboard() {
   return (

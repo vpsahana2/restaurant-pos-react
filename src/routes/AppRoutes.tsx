@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Dashboard from "../pages/Dashboard/Dashboard";
-import Login from "../pages/Login/Login";
-import POS from "../pages/POS/POS";
-import Orders from "../pages/Orders/Orders";
-import Reports from "../pages/Reports/Reports";
-import Settings from "../pages/Settings/Settings";
+import Dashboard from "../features/dashboard/pages/Dashboard";
+import Login from "../features/auth/pages/Login";
+// import POS from "../features/pos/pages/POS/POS";
+import Orders from "../features/orders/pages/Orders";
+import Reports from "../features/reports/pages/Reports";
+import Settings from "../features/settings/pages/Settings";
+import POS from "../features/pos/pages/POS";
 
 function AppRoutes() {
   return (
