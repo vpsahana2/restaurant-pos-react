@@ -9,16 +9,16 @@ interface Props {
 function CategoryButton({ name, selected, onClick }: Props) {
   return (
     <Button
-      fullWidth
       variant={selected ? "contained" : "outlined"}
+      onClick={onClick}
       sx={{
-        justifyContent: "flex-start",
-        py: 1.2,
+        minWidth: 120,
+        height: 46,
+        px: 3,
         borderRadius: 2,
         textTransform: "none",
         fontWeight: 600,
       }}
-      onClick={onClick}
     >
       {name}
     </Button>

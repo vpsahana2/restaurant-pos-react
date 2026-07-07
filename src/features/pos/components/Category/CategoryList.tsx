@@ -1,8 +1,6 @@
-import { Typography } from "@mui/material";
-import { Stack } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import CategoryButton from "./CategoryButton";
-
 import { categories } from "../../data/categories";
 
 interface Props {
@@ -23,7 +21,13 @@ function CategoryList({ selectedCategory, onSelectCategory }: Props) {
         Categories
       </Typography>
 
-      <Stack spacing={1}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 2,
+        }}
+      >
         {categories.map((category) => (
           <CategoryButton
             key={category.id}
@@ -32,7 +36,7 @@ function CategoryList({ selectedCategory, onSelectCategory }: Props) {
             onClick={() => onSelectCategory(category.name)}
           />
         ))}
-      </Stack>
+      </Box>
     </>
   );
 }
