@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "types": ["vite/client"],
+    "allowArbitraryExtensions": true,
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src", "frontend/src/routes", "frontend/src/main.tsx", "frontend/src/components/layout", "frontend/src/features/auth/pages", "frontend/src/features/dashboard/components", "frontend/src/features/dashboard/pages", "frontend/src/features/dashboard/types", "frontend/src/features/orders/components", "frontend/src/features/orders/data", "frontend/src/features/orders/pages", "frontend/src/features/orders/types", "frontend/src/features/pos/data", "frontend/src/features/pos/pages", "frontend/src/features/pos/types", "frontend/src/features/pos/components/Cart", "frontend/src/features/pos/components/Category", "frontend/src/features/pos/components/Product", "frontend/src/features/reports/data", "frontend/src/features/reports/services", "frontend/src/features/reports/types", "frontend/src/features/reports/pages", "frontend/src/features/reports/components/KPI", "frontend/src/features/settings/types", "frontend/src/features/settings/services", "frontend/src/features/settings/pages", "frontend/src/features/settings/data", "frontend/src/features/settings/routes", "frontend/src/features/settings/components"]
+}
