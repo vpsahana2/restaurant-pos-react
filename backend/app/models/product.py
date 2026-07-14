@@ -1,8 +1,11 @@
-from sqlalchemy import Column
-from sqlalchemy import Float
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import (
+    Boolean,
+    Column,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+)
 
 from sqlalchemy.orm import relationship
 
@@ -17,17 +20,36 @@ class Product(Base):
     category_id = Column(
         Integer,
         ForeignKey("categories.id"),
+        nullable=False,
     )
 
-    name = Column(String(200), nullable=False)
+    name = Column(
+        String(200),
+        nullable=False,
+    )
 
-    description = Column(String(500))
+    description = Column(
+        String(500),
+    )
 
-    image = Column(String(255))
+    image = Column(
+        String(255),
+    )
 
-    price = Column(Float, nullable=False)
+    price = Column(
+        Float,
+        nullable=False,
+    )
 
-    stock = Column(Integer, default=0)
+    stock = Column(
+        Integer,
+        default=0,
+    )
+
+    is_active = Column(
+        Boolean,
+        default=True,
+    )
 
     category = relationship(
         "Category",
