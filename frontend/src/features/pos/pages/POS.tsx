@@ -1,7 +1,18 @@
 import { useState } from "react";
 
-import { Alert, Box, Grid, Paper, Snackbar, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  Grid,
+  Paper,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 
+import CustomerSelect from "../components/Checkout/CustomerSelect";
+import PaymentMethodSelect from "../components/Checkout/PaymentMethodSelect";
+import { paymentMethods } from "../data/paymentMethods";
 import MainLayout from "../../../components/layout/MainLayout";
 
 import CategoryList from "../components/Category/CategoryList";
@@ -9,22 +20,71 @@ import ProductGrid from "../components/Product/ProductGrid";
 import Cart from "../components/Cart/Cart";
 import ProductSearch from "../components/Product/ProductSearch";
 
-import { products } from "../data/products";
+import { usePOS } from "../hooks/usePOS";
 
 import type { Product } from "../types/Product";
 import type { CartItem } from "../types/Cart";
-
+import { checkout } from "../../../api/orders";
 function POS() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const { products, categories, customers, loading } = usePOS();
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null,
+  );
+
   const [cart, setCart] = useState<CartItem[]>([]);
   const [searchText, setSearchText] = useState("");
-
+  const [customerId, setCustomerId] = useState<number | "">("");
+  const [paymentMethod, setPaymentMethod] = useState("Cash");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  if (loading) {
+    return (
+      <MainLayout>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "70vh",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </MainLayout>
+    );
+  }
+  const handleCheckout = async () => {
+    try {
+      if (customerId === "") {
+        alert("Please select a customer");
+        return;
+      }
+
+      const request = {
+        customer_id: customerId,
+        payment_method: paymentMethod,
+        items: cart.map((item) => ({
+          product_id: item.product.id,
+          quantity: item.quantity,
+        })),
+      };
+      const order = await checkout(request);
+
+      setSnackbarMessage(`Order #${order.id} created successfully`);
+
+      setSnackbarOpen(true);
+
+      clearCart();
+    } catch (error) {
+      console.error(error);
+
+      alert("Checkout failed");
+    }
+  };
   const filteredProducts = products.filter((product) => {
     const categoryMatch =
-      selectedCategory === "All" || product.category === selectedCategory;
+      selectedCategoryId === null || product.category_id === selectedCategoryId;
 
     const searchMatch = product.name
       .toLowerCase()
@@ -109,19 +169,35 @@ function POS() {
         Restaurant POS
       </Typography>
 
-      {/* Categories */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <CategoryList
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
+          categories={categories}
+          selectedCategory={selectedCategoryId}
+          onSelectCategory={setSelectedCategoryId}
         />
       </Paper>
 
-      {/* Search */}
       <ProductSearch value={searchText} onChange={setSearchText} />
+      <Paper sx={{ p: 2, mb: 3 }}>
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <CustomerSelect
+              customers={customers}
+              value={customerId}
+              onChange={setCustomerId}
+            />
+          </Grid>
 
+          <Grid size={{ xs: 12, md: 6 }}>
+            <PaymentMethodSelect
+              methods={paymentMethods}
+              value={paymentMethod}
+              onChange={setPaymentMethod}
+            />
+          </Grid>
+        </Grid>
+      </Paper>
       <Grid container spacing={3}>
-        {/* Products */}
         <Grid size={{ xs: 12, lg: 9 }}>
           <Paper sx={{ p: 2 }}>
             <ProductGrid
@@ -131,7 +207,6 @@ function POS() {
           </Paper>
         </Grid>
 
-        {/* Cart */}
         <Grid size={{ xs: 12, lg: 3 }}>
           <Box
             sx={{
@@ -145,6 +220,8 @@ function POS() {
               onDecrease={decreaseQuantity}
               onRemove={removeItem}
               onClearCart={clearCart}
+              onCheckout={handleCheckout}
+              customerId={customerId}
             />
           </Box>
         </Grid>

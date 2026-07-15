@@ -67,7 +67,7 @@ function ProductCard({ product, onAddToCart }: Props) {
         </Typography>
 
         <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
-          ${product.price.toFixed(2)}
+          ${Number(product.price).toFixed(2)}
         </Typography>
       </CardContent>
       {/* <CardActions>

@@ -1,11 +1,6 @@
-export interface DashboardCard {
-  id: number;
-  title: string;
-  value: string;
-  color:
-    | "primary"
-    | "secondary"
-    | "success"
-    | "warning"
-    | "error";
+export interface DashboardStats {
+  products: number;
+  customers: number;
+  orders: number;
+  sales: number;
 }

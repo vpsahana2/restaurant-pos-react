@@ -4,10 +4,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
-import type { CartItem } from "../../types/Cart";
-
+import type { CartItem as CartItemType } from "../../types/Cart";
 interface Props {
-  item: CartItem;
+  item: CartItemType;
   onIncrease: () => void;
   onDecrease: () => void;
   onRemove: () => void;
@@ -24,7 +23,7 @@ function CartItem({ item, onIncrease, onDecrease, onRemove }: Props) {
       <Typography sx={{ fontWeight: 600 }}>{item.product.name}</Typography>
 
       <Typography color="text.secondary">
-        ${item.product.price.toFixed(2)}
+        ${Number(item.product.price).toFixed(2)}
       </Typography>
 
       <Box

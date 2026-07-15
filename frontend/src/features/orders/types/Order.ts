@@ -6,19 +6,20 @@ export type OrderStatus =
 
 export interface OrderItem {
   id: number;
-  name: string;
+  product_id: number;
   quantity: number;
   price: number;
+  total: number;
 }
 
 export interface Order {
   id: number;
-  orderNumber: string;
-  customer: string;
-  total: number;
+  customer_id: number;
+  payment_method: string;
   status: OrderStatus;
-  paymentMethod: "Cash" | "Card";
-  createdAt: string;
-
+  subtotal: number;
+  tax: number;
+  grand_total: number;
+  created_at: string;
   items: OrderItem[];
 }

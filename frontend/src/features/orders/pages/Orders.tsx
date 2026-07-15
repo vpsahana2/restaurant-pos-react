@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 
 import {
-  Box,
   FormControl,
   Grid,
   InputLabel,
@@ -10,6 +9,8 @@ import {
   Select,
   type SelectChangeEvent,
   Typography,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 
 import MainLayout from "../../../components/layout/MainLayout";
@@ -18,11 +19,12 @@ import OrderSearch from "../components/OrderSearch";
 import OrderTable from "../components/OrderTable";
 import OrderDetailsDialog from "../components/OrderDetailsDialog";
 
-import { orders } from "../data/orders";
+import { useOrders } from "../hooks/useOrders";
 
 import type { Order, OrderStatus } from "../types/Order";
 
 function Orders() {
+  const { orders, loading, reload } = useOrders();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -44,16 +46,31 @@ function Orders() {
 
   const filteredOrders = useMemo(() => {
     return orders.filter((order) => {
-      const matchesSearch =
-        order.orderNumber.toLowerCase().includes(search.toLowerCase()) ||
-        order.customer.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch = order.id.toString().includes(search);
 
       const matchesStatus =
         status === "All" || order.status === (status as OrderStatus);
 
       return matchesSearch && matchesStatus;
     });
-  }, [search, status]);
+  }, [orders, search, status]);
+
+  if (loading) {
+    return (
+      <MainLayout>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "70vh",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>
@@ -86,13 +103,9 @@ function Orders() {
                 onChange={handleStatusChange}
               >
                 <MenuItem value="All">All</MenuItem>
-
                 <MenuItem value="Pending">Pending</MenuItem>
-
                 <MenuItem value="Preparing">Preparing</MenuItem>
-
                 <MenuItem value="Completed">Completed</MenuItem>
-
                 <MenuItem value="Cancelled">Cancelled</MenuItem>
               </Select>
             </FormControl>

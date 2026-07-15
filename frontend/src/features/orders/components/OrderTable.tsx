@@ -27,9 +27,9 @@ function OrderTable({ orders, onView }: Props) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Order</TableCell>
+            <TableCell>Order ID</TableCell>
 
-            <TableCell>Customer</TableCell>
+            <TableCell>Customer ID</TableCell>
 
             <TableCell>Payment</TableCell>
 
@@ -44,13 +44,13 @@ function OrderTable({ orders, onView }: Props) {
         <TableBody>
           {orders.map((order) => (
             <TableRow key={order.id}>
-              <TableCell>{order.orderNumber}</TableCell>
+              <TableCell>#{order.id}</TableCell>
 
-              <TableCell>{order.customer}</TableCell>
+              <TableCell>{order.customer_id}</TableCell>
 
-              <TableCell>{order.paymentMethod}</TableCell>
+              <TableCell>{order.payment_method}</TableCell>
 
-              <TableCell>${order.total.toFixed(2)}</TableCell>
+              <TableCell>${Number(order.grand_total).toFixed(2)}</TableCell>
 
               <TableCell>
                 <OrderStatusChip status={order.status} />

@@ -1,7 +1,26 @@
 import api from "./axios";
 
-export const getOrders = () =>
-  api.get("/orders");
+import type {
+  CheckoutRequest,
+  CheckoutResponse,
+} from "../features/orders/types/CreateOrder";
 
-export const createOrder = (data: any) =>
-  api.post("/orders", data);
+export async function checkout(
+  request: CheckoutRequest
+): Promise<CheckoutResponse> {
+  const response = await api.post<CheckoutResponse>(
+    "/orders",
+    request
+  );
+
+  return response.data;
+}
+export async function getOrders() {
+  const response = await api.get("/orders");
+  return response.data;
+}
+
+export async function getOrder(id: number) {
+  const response = await api.get(`/orders/${id}`);
+  return response.data;
+}

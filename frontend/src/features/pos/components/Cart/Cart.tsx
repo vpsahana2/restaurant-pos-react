@@ -11,17 +11,29 @@ import type { CartItem as CartItemType } from "../../types/Cart";
 
 interface Props {
   cart: CartItemType[];
+
   onIncrease: (id: number) => void;
   onDecrease: (id: number) => void;
   onRemove: (id: number) => void;
   onClearCart: () => void;
+  onCheckout: () => void;
+
+  customerId: number | "";
 }
 
-function Cart({ cart, onIncrease, onDecrease, onRemove, onClearCart }: Props) {
+function Cart({
+  cart,
+  onIncrease,
+  onDecrease,
+  onRemove,
+  onClearCart,
+  onCheckout,
+  customerId,
+}: Props) {
   const [openDialog, setOpenDialog] = useState(false);
 
   const subtotal = cart.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => sum + Number(item.product.price) * item.quantity,
     0,
   );
 
@@ -42,8 +54,8 @@ function Cart({ cart, onIncrease, onDecrease, onRemove, onClearCart }: Props) {
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
             justifyContent: "space-between",
+            alignItems: "center",
             mb: 2,
           }}
         >
@@ -56,15 +68,8 @@ function Cart({ cart, onIncrease, onDecrease, onRemove, onClearCart }: Props) {
 
         <Divider sx={{ mb: 2 }} />
 
-        {/* Empty Cart */}
         {cart.length === 0 ? (
-          <Typography
-            color="text.secondary"
-            align="center"
-            sx={{
-              mt: 5,
-            }}
-          >
+          <Typography align="center" color="text.secondary" sx={{ mt: 5 }}>
             Cart is empty
           </Typography>
         ) : (
@@ -81,7 +86,6 @@ function Cart({ cart, onIncrease, onDecrease, onRemove, onClearCart }: Props) {
 
             <Divider sx={{ my: 2 }} />
 
-            {/* Summary */}
             <Box
               sx={{
                 display: "flex",
@@ -90,7 +94,6 @@ function Cart({ cart, onIncrease, onDecrease, onRemove, onClearCart }: Props) {
               }}
             >
               <Typography>Subtotal</Typography>
-
               <Typography>${subtotal.toFixed(2)}</Typography>
             </Box>
 
@@ -134,24 +137,20 @@ function Cart({ cart, onIncrease, onDecrease, onRemove, onClearCart }: Props) {
               </Typography>
             </Box>
 
-            {/* Checkout */}
             <Button
-              variant="contained"
               fullWidth
+              variant="contained"
               size="large"
-              disabled={cart.length === 0}
-              sx={{
-                mb: 2,
-              }}
+              disabled={cart.length === 0 || customerId === ""}
+              onClick={onCheckout}
             >
               Checkout
             </Button>
 
-            {/* Clear Cart */}
             <Button
+              fullWidth
               variant="outlined"
               color="error"
-              fullWidth
               onClick={() => setOpenDialog(true)}
             >
               Clear Cart
@@ -160,7 +159,6 @@ function Cart({ cart, onIncrease, onDecrease, onRemove, onClearCart }: Props) {
         )}
       </Paper>
 
-      {/* Confirmation Dialog */}
       <ClearCartDialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}

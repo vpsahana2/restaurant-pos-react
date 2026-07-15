@@ -1,14 +1,20 @@
 import { Box, Typography } from "@mui/material";
 
 import CategoryButton from "./CategoryButton";
-import { categories } from "../../data/categories";
+
+import type { Category } from "../../types/Category";
 
 interface Props {
-  selectedCategory: string;
-  onSelectCategory: (category: string) => void;
+  categories: Category[];
+  selectedCategory: number | null;
+  onSelectCategory: (categoryId: number | null) => void;
 }
 
-function CategoryList({ selectedCategory, onSelectCategory }: Props) {
+function CategoryList({
+  categories,
+  selectedCategory,
+  onSelectCategory,
+}: Props) {
   return (
     <>
       <Typography
@@ -28,12 +34,20 @@ function CategoryList({ selectedCategory, onSelectCategory }: Props) {
           gap: 2,
         }}
       >
+        {/* All Categories */}
+        <CategoryButton
+          name="All"
+          selected={selectedCategory === null}
+          onClick={() => onSelectCategory(null)}
+        />
+
+        {/* Categories from API */}
         {categories.map((category) => (
           <CategoryButton
             key={category.id}
             name={category.name}
-            selected={selectedCategory === category.name}
-            onClick={() => onSelectCategory(category.name)}
+            selected={selectedCategory === category.id}
+            onClick={() => onSelectCategory(category.id)}
           />
         ))}
       </Box>

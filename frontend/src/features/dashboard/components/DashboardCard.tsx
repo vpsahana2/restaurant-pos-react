@@ -2,7 +2,7 @@ import { Card, CardContent, Typography, Chip } from "@mui/material";
 
 interface Props {
   title: string;
-  value: string;
+  value: string | number;
   color: "primary" | "secondary" | "success" | "warning" | "error";
 }
 
