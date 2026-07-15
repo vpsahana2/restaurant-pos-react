@@ -4,7 +4,13 @@ import type {
   CheckoutRequest,
   CheckoutResponse,
 } from "../features/orders/types/CreateOrder";
+import type { RecentOrder } from "../features/dashboard/types/RecentOrder";
 
+export async function getRecentOrders(): Promise<RecentOrder[]> {
+  const response = await api.get<RecentOrder[]>("/orders");
+
+  return response.data;
+}
 export async function checkout(
   request: CheckoutRequest
 ): Promise<CheckoutResponse> {

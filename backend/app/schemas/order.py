@@ -27,10 +27,21 @@ class OrderItemResponse(BaseModel):
     )
 
 
+class CustomerSummary(BaseModel):
+    id: int
+    full_name: str
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )
+
+
 class OrderResponse(BaseModel):
     id: int
 
     customer_id: int
+
+    customer: CustomerSummary
 
     payment_method: str
 
