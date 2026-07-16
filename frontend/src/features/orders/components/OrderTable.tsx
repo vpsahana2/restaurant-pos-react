@@ -29,7 +29,7 @@ function OrderTable({ orders, onView }: Props) {
           <TableRow>
             <TableCell>Order ID</TableCell>
 
-            <TableCell>Customer ID</TableCell>
+            <TableCell>Customer</TableCell>
 
             <TableCell>Payment</TableCell>
 
@@ -46,7 +46,7 @@ function OrderTable({ orders, onView }: Props) {
             <TableRow key={order.id}>
               <TableCell>#{order.id}</TableCell>
 
-              <TableCell>{order.customer_id}</TableCell>
+              <TableCell>{order.customer.full_name}</TableCell>
 
               <TableCell>{order.payment_method}</TableCell>
 

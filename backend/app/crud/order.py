@@ -1,6 +1,7 @@
-from sqlalchemy.orm import Session
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import Session, joinedload
+
 from app.models.order import Order
+from app.models.order_item import OrderItem
 
 
 def create_order(
@@ -28,8 +29,8 @@ def get_orders(db: Session):
     return (
         db.query(Order)
         .options(
-            joinedload(Order.items),
             joinedload(Order.customer),
+            joinedload(Order.items).joinedload(OrderItem.product),
         )
         .order_by(Order.id.desc())
         .all()
@@ -43,8 +44,8 @@ def get_order(
     return (
         db.query(Order)
         .options(
-            joinedload(Order.items),
             joinedload(Order.customer),
+            joinedload(Order.items).joinedload(OrderItem.product),
         )
         .filter(Order.id == order_id)
         .first()

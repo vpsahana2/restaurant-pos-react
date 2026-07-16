@@ -4,6 +4,10 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
+# -----------------------------
+# Create Schemas
+# -----------------------------
+
 class OrderItemCreate(BaseModel):
     product_id: int
     quantity: int
@@ -15,21 +19,44 @@ class OrderCreate(BaseModel):
     items: list[OrderItemCreate]
 
 
-class OrderItemResponse(BaseModel):
+# -----------------------------
+# Summary Schemas
+# -----------------------------
+
+class CustomerSummary(BaseModel):
     id: int
-    product_id: int
-    quantity: int
-    price: float
-    total: float
+    full_name: str
 
     model_config = ConfigDict(
         from_attributes=True
     )
 
 
-class CustomerSummary(BaseModel):
+class ProductSummary(BaseModel):
     id: int
-    full_name: str
+    name: str
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )
+
+
+# -----------------------------
+# Response Schemas
+# -----------------------------
+
+class OrderItemResponse(BaseModel):
+    id: int
+
+    product_id: int
+
+    product: ProductSummary
+
+    quantity: int
+
+    price: float
+
+    total: float
 
     model_config = ConfigDict(
         from_attributes=True

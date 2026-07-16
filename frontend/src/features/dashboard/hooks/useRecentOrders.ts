@@ -1,23 +1,26 @@
 import { useEffect, useState } from "react";
 
-import { getRecentOrders } from "../../../api/orders";
+import { getOrders } from "../../../api/orders";
 
 import type { RecentOrder } from "../types/RecentOrder";
 
 export function useRecentOrders() {
   const [orders, setOrders] = useState<RecentOrder[]>([]);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadOrders();
+    void loadOrders();
   }, []);
 
   async function loadOrders() {
     try {
-      const data = await getRecentOrders();
+      setLoading(true);
+
+      const data = await getOrders();
 
       setOrders(data.slice(0, 5));
+    } catch (error) {
+      console.error("Failed to load recent orders:", error);
     } finally {
       setLoading(false);
     }

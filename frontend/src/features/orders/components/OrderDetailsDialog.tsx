@@ -1,222 +1,85 @@
 import {
-  Box,
-  Button,
-  Chip,
+  CircularProgress,
   Dialog,
-  DialogActions,
-  DialogContent,
   DialogTitle,
+  DialogContent,
   Divider,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
+  List,
+  ListItem,
+  ListItemText,
   Typography,
+  Box,
 } from "@mui/material";
 
-import OrderStatusChip from "./OrderStatusChip";
-
-import type { Order } from "../types/Order";
+import { useOrder } from "../hooks/useOrder";
 
 interface Props {
   open: boolean;
-  order: Order | null;
+
+  orderId: number | null;
+
   onClose: () => void;
 }
 
-function OrderDetailsDialog({ open, order, onClose }: Props) {
-  if (!order) return null;
-
-  const subtotal = order.items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  );
-
-  const tax = subtotal * 0.15;
-
-  const grandTotal = subtotal + tax;
+function OrderDetailsDialog({ open, orderId, onClose }: Props) {
+  const { order, loading } = useOrder(orderId, open);
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Order Details</DialogTitle>
 
-      <DialogContent dividers>
-        {/* Order Information */}
-
-        <Paper
-          elevation={1}
-          sx={{
-            p: 2,
-            mb: 3,
-          }}
-        >
-          <Typography variant="h6">{order.orderNumber}</Typography>
-
-          <Divider sx={{ my: 2 }} />
-
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2,1fr)",
-              gap: 2,
-            }}
-          >
-            <Box>
-              <Typography variant="body2" color="text.secondary">
-                Customer
-              </Typography>
-
-              <Typography>{order.customer}</Typography>
-            </Box>
-
-            <Box>
-              <Typography variant="body2" color="text.secondary">
-                Payment
-              </Typography>
-
-              <Chip
-                label={order.paymentMethod}
-                color={order.paymentMethod === "Cash" ? "success" : "primary"}
-              />
-            </Box>
-
-            <Box>
-              <Typography variant="body2" color="text.secondary">
-                Date
-              </Typography>
-
-              <Typography>{order.createdAt}</Typography>
-            </Box>
-
-            <Box>
-              <Typography variant="body2" color="text.secondary">
-                Status
-              </Typography>
-
-              <OrderStatusChip status={order.status} />
-            </Box>
-          </Box>
-        </Paper>
-
-        {/* Ordered Items */}
-
-        <Typography
-          variant="h6"
-          sx={{
-            mb: 2,
-          }}
-        >
-          Ordered Items
-        </Typography>
-
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Item</TableCell>
-
-              <TableCell align="center">Qty</TableCell>
-
-              <TableCell align="right">Price</TableCell>
-
-              <TableCell align="right">Total</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {order.items.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
-
-                <TableCell align="center">{item.quantity}</TableCell>
-
-                <TableCell align="right">${item.price.toFixed(2)}</TableCell>
-
-                <TableCell align="right">
-                  ${(item.quantity * item.price).toFixed(2)}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        <Divider
-          sx={{
-            my: 3,
-          }}
-        />
-
-        {/* Summary */}
-
-        <Box
-          sx={{
-            width: 300,
-            ml: "auto",
-          }}
-        >
+      <DialogContent>
+        {loading && (
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
-              mb: 1,
+              justifyContent: "center",
+              py: 5,
             }}
           >
-            <Typography>Subtotal</Typography>
-
-            <Typography>${subtotal.toFixed(2)}</Typography>
+            <CircularProgress />
           </Box>
+        )}
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              mb: 1,
-            }}
-          >
-            <Typography>Tax (15%)</Typography>
+        {!loading && order && (
+          <>
+            <Typography>Customer: {order.customer.full_name}</Typography>
 
-            <Typography>${tax.toFixed(2)}</Typography>
-          </Box>
+            <Typography>Payment: {order.payment_method}</Typography>
 
-          <Divider
-            sx={{
-              my: 1,
-            }}
-          />
+            <Typography>Status: {order.status}</Typography>
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 700,
-              }}
-            >
-              Grand Total
+            <Typography>
+              Date: {new Date(order.created_at).toLocaleString()}
             </Typography>
 
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 700,
-              }}
-            >
-              ${grandTotal.toFixed(2)}
+            <Divider sx={{ my: 2 }} />
+
+            <List>
+              {order.items.map((item) => (
+                <ListItem key={item.id}>
+                  <ListItemText
+                    primary={item.product.name}
+                    secondary={`${item.quantity} × ₹${item.price}`}
+                  />
+
+                  <Typography>₹{item.total.toFixed(2)}</Typography>
+                </ListItem>
+              ))}
+            </List>
+
+            <Divider sx={{ my: 2 }} />
+
+            <Typography>Subtotal: ₹{order.subtotal.toFixed(2)}</Typography>
+
+            <Typography>Tax: ₹{order.tax.toFixed(2)}</Typography>
+
+            <Typography variant="h6" sx={{ mt: 2 }}>
+              Grand Total: ₹{order.grand_total.toFixed(2)}
             </Typography>
-          </Box>
-        </Box>
+          </>
+        )}
       </DialogContent>
-
-      <DialogActions>
-        <Button variant="contained" onClick={onClose}>
-          Close
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 }

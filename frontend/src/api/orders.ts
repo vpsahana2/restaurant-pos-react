@@ -4,29 +4,32 @@ import type {
   CheckoutRequest,
   CheckoutResponse,
 } from "../features/orders/types/CreateOrder";
-import type { RecentOrder } from "../features/dashboard/types/RecentOrder";
 
-export async function getRecentOrders(): Promise<RecentOrder[]> {
-  const response = await api.get<RecentOrder[]>("/orders");
+import type { Order } from "../features/orders/types/Order";
 
-  return response.data;
-}
 export async function checkout(
   request: CheckoutRequest
 ): Promise<CheckoutResponse> {
-  const response = await api.post<CheckoutResponse>(
+  const response = await api.post(
     "/orders",
     request
   );
 
   return response.data;
 }
-export async function getOrders() {
+
+export async function getOrders(): Promise<Order[]> {
   const response = await api.get("/orders");
+
   return response.data;
 }
 
-export async function getOrder(id: number) {
-  const response = await api.get(`/orders/${id}`);
+export async function getOrder(
+  id: number
+): Promise<Order> {
+  const response = await api.get(
+    `/orders/${id}`
+  );
+
   return response.data;
 }

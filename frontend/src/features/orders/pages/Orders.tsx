@@ -27,7 +27,7 @@ function Orders() {
   const { orders, loading, reload } = useOrders();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleStatusChange = (event: SelectChangeEvent) => {
@@ -35,13 +35,13 @@ function Orders() {
   };
 
   const handleViewOrder = (order: Order) => {
-    setSelectedOrder(order);
+    setSelectedOrderId(order.id);
+
     setDialogOpen(true);
   };
-
   const handleCloseDialog = () => {
     setDialogOpen(false);
-    setSelectedOrder(null);
+    setSelectedOrderId(null);
   };
 
   const filteredOrders = useMemo(() => {
@@ -117,7 +117,7 @@ function Orders() {
 
       <OrderDetailsDialog
         open={dialogOpen}
-        order={selectedOrder}
+        orderId={selectedOrderId}
         onClose={handleCloseDialog}
       />
     </MainLayout>
